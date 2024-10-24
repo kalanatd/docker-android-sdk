@@ -1,13 +1,14 @@
 FROM ubuntu:22.04
 
-LABEL de.mindrunner.android-docker.flavour="ubuntu-lazydl"
 
 ENV ANDROID_SDK_HOME /opt/android-sdk-linux
 ENV ANDROID_SDK_ROOT /opt/android-sdk-linux
 ENV ANDROID_HOME /opt/android-sdk-linux
 ENV ANDROID_SDK /opt/android-sdk-linux
+ENV SYSTEM_IMAGE="system-images;android-34-ext12;google_apis_playstore;x86_64"
+ENV ANDROID_PLATFORM_API="platforms;android-34"
 
-ENV PATH $PATH:$ANDROID_HOME/platform-tools:$ANDROID_HOME/cmdline-tools/latest/bin/:$ANDROID_HOME/build-tools/34.0.0/:$ANDROID_HOME/emulator/:$ANDROID_HOME/bin:/opt/tools
+ENV PATH $PATH:$ANDROID_HOME/platform-tools:$ANDROID_HOME/cmdline-tools/latest/bin/:$ANDROID_HOME/build-tools/35.0.0/:$ANDROID_HOME/emulator/:$ANDROID_HOME/bin:/opt/tools
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -36,6 +37,9 @@ COPY tools /opt/tools
 
 COPY licenses /opt/licenses
 
+RUN sdkmanager --install "$SYSTEM_IMAGE" "$ANDROID_PLATFORM_API" "platform-tools" "emulator" "platforms"
+
+
 WORKDIR /opt/android-sdk-linux
 
-CMD entrypoint.sh lazy-dl
+CMD entrypoint.sh built-in
